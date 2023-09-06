@@ -11,8 +11,8 @@ pipeline {
     }
 
     environment {
-        BASE_URL = credentials('url-dependency')
-        DEPENDENCY_API_KEY = credentials('dependency--api-key')
+        BASE_URL = credentials('ndop-url-dependency')
+        DEPENDENCY_API_KEY = credentials('ndop-dependency-credentials')
         PROJECT_NAME = 'prueba_dt'
         APP_NAME = 'deors-demos-java-pipeline'
         APP_VERSION = '1.0'
@@ -27,12 +27,12 @@ pipeline {
         BRANCH_MINUS = BRANCH_SONAR.minus('origin/')
 
         // credentials & external systems
-        AAD_SERVICE_PRINCIPAL = credentials('admins-rbac-sp')
-        AKS_TENANT = credentials('aks-tenant')
-        AKS_RESOURCE_GROUP = credentials('aks-resource-group')
-        AKS_NAME = credentials('aks-name')
+        AAD_SERVICE_PRINCIPAL = credentials('ndop-admins-rbac-sp')
+        AKS_TENANT = credentials('ndop-aks-tenant')
+        AKS_RESOURCE_GROUP = credentials('ndop-aks-resource-group')
+        AKS_NAME = credentials('ndop-aks-name')
         //ACR_NAME = credentials('acr-name')
-        ACR_URL = credentials('acr-url')
+        ACR_URL = credentials('ndop-acr-url-tenant')
         // change this later
         ACR_PULL_CREDENTIAL = 'ndop-acr-credential-secret'
         SONAR_CREDENTIALS = credentials('sonar-new-credentials')
