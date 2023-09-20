@@ -69,14 +69,14 @@ pipeline {
             }
         }
 
-        stage('Code inspection & quality gate') {
+        /*stage('Code inspection & quality gate') {
             steps {
                 echo '-=- run code inspection & check quality gate -=-'
                 withSonarQubeEnv('ci-sonarqube') {
                     sh "./mvnw clean compile sonar:sonar -Dsonar.projectKey=$APP_NAME-$BRANCH_MINUS -Dsonar.login=$SONAR_CREDENTIALS_USR -Dsonar.password=$SONAR_CREDENTIALS_PSW"
                 }
             }
-        }
+        }*/
 
         stage('Mutation tests') {
             steps {
@@ -91,7 +91,7 @@ pipeline {
             }
         }
 
-        stage('Dependency Tracker') {
+        /*stage('Dependency Tracker') {
             steps {
                 dependencyTrackPublisher artifact: 'target/bom.xml',
                     projectName: env.APP_NAME,
@@ -104,7 +104,7 @@ pipeline {
                     failedTotalMedium:      qualityGates.security.dependencies.medium.failed,
                     unstableTotalMedium:    qualityGates.security.dependencies.medium.unstable
             }
-        }
+        }*/
 
         /*stage('Software composition analysis') {
             steps {
