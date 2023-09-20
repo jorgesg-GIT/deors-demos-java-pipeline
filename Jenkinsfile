@@ -7,12 +7,12 @@ System.setProperty("hudson.model.DirectoryBrowserSupport.CSP", "")
 
 pipeline {
     agent {
-        kubernetes(containerCall(imageName: ACR_NAME, credentialSecret: SECRET_NAME))
+        kubernetes(containerCall(imageName: ACR_NAME, credentialSecret: SECRET_NAME, nodeSelectorValue: NODE_SELECTOR_VALUE, nodeTaintKey: NODE_TAINT_KEY, jdkBlocked: false, podmanBlocked:false, aksBuilderBlocked:false, lighthouseBuilderBlocked:false))
     }
 
     environment {
         BASE_URL = credentials('ndop-url-dependency')
-        DEPENDENCY_API_KEY = credentials('ndop-dependency-credentials')
+        DEPENDENCY_API_KEY = credentials('ndop-dependencytrack--api-key')
         PROJECT_NAME = 'prueba_dt'
         APP_NAME = 'deors-demos-java-pipeline'
         APP_VERSION = '1.0'
@@ -31,13 +31,13 @@ pipeline {
         AKS_TENANT = credentials('ndop-aks-tenant')
         AKS_RESOURCE_GROUP = credentials('ndop-aks-resource-group')
         AKS_NAME = credentials('ndop-aks-name')
-        //ACR_NAME = credentials('acr-name')
+        //ACR_NAME = credentials('ndop-acr-name-tenant')
         ACR_URL = credentials('ndop-acr-url-tenant')
         // change this later
-        ACR_PULL_CREDENTIAL = 'ndop-acr-credential-secret'
-        //SONAR_CREDENTIALS = credentials('sonar-new-credentials')
-        //SELENIUM_HUB_HOST = credentials('selenium-hub-host')
-        //SELENIUM_HUB_PORT = credentials('selenium-hub-port')
+        ACR_PULL_CREDENTIAL = 'ndop-acr-credential-tenant-secret'
+        SONAR_CREDENTIALS = credentials('ndop-sonar-new-credentials')
+        SELENIUM_HUB_HOST = credentials('ndop-selenium-hub-host')
+        SELENIUM_HUB_PORT = credentials('ndop-selenium-hub-port')
     }
 
     stages {
@@ -186,12 +186,12 @@ pipeline {
             steps {
                 echo '-=- execute web page performance analysis -=-'
                 script {
-                    def lighthousejob = build job: "lightHouseUsingLib",  parameters: [string(name: 'TEST_CONTAINER_NAME', value: "$env.TEST_CONTAINER_NAME"),
+                    def lighthousejob = build job: "/common/lightHouseUsingLib",  parameters: [string(name: 'TEST_CONTAINER_NAME', value: "$env.TEST_CONTAINER_NAME"),
                                                        string(name: 'APP_CONTEXT_ROOT', value: "$env.APP_CONTEXT_ROOT"),
                                                        string(name: 'APP_LISTENING_PORT', value: String.valueOf("$env.APP_LISTENING_PORT")),
                                                        string(name: 'GIT_REPO_URL', value: gitUtility.getGitUrlRepositoryUnderPipeline()),
                                                        string(name: 'BRANCH_NAME', value: gitUtility.getGitBranchUnderPipeline())]
-                    copyArtifacts(projectName: "lightHouseUsingLib", selector: specific("${lighthousejob.number}"))                    
+                    copyArtifacts(projectName: "/common/lightHouseUsingLib", selector: specific("${lighthousejob.number}"))                    
                     lighthouseReport('./report.json')
                 }
             }
