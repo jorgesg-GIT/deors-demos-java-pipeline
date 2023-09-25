@@ -11,8 +11,8 @@ pipeline {
     }
 
     environment {
-        /*BASE_URL = credentials('ndop-url-dependency')*/
-        /*DEPENDENCY_API_KEY = credentials('ndop-dependencytrack--api-key')*/
+        BASE_URL = credentials('ndop-url-dependency')
+        DEPENDENCY_API_KEY = credentials('ndop-dependencytrack--api-key')
         PROJECT_NAME = 'prueba_dt'
         APP_NAME = 'deors-demos-java-pipeline'
         APP_VERSION = '1.0'
@@ -35,9 +35,9 @@ pipeline {
         ACR_URL = credentials('ndop-acr-url-tenant')
         // change this later
         ACR_PULL_CREDENTIAL = 'ndop-acr-credential-tenant-secret'
-        /*SONAR_CREDENTIALS = credentials('ndop-sonar-new-credentials')
+        SONAR_CREDENTIALS = credentials('ndop-sonar-new-credentials')
         SELENIUM_HUB_HOST = credentials('ndop-selenium-hub-host')
-        SELENIUM_HUB_PORT = credentials('ndop-selenium-hub-port')*/
+        SELENIUM_HUB_PORT = credentials('ndop-selenium-hub-port')
     }
 
     stages {
@@ -69,14 +69,14 @@ pipeline {
             }
         }
 
-        /*stage('Code inspection & quality gate') {
+        stage('Code inspection & quality gate') {
             steps {
                 echo '-=- run code inspection & check quality gate -=-'
                 withSonarQubeEnv('ci-sonarqube') {
                     sh "./mvnw clean compile sonar:sonar -Dsonar.projectKey=$APP_NAME-$BRANCH_MINUS -Dsonar.login=$SONAR_CREDENTIALS_USR -Dsonar.password=$SONAR_CREDENTIALS_PSW"
                 }
             }
-        }*/
+        }
 
         stage('Mutation tests') {
             steps {
@@ -91,7 +91,7 @@ pipeline {
             }
         }
 
-        /*stage('Dependency Tracker') {
+        stage('Dependency Tracker') {
             steps {
                 dependencyTrackPublisher artifact: 'target/bom.xml',
                     projectName: env.APP_NAME,
@@ -104,7 +104,7 @@ pipeline {
                     failedTotalMedium:      qualityGates.security.dependencies.medium.failed,
                     unstableTotalMedium:    qualityGates.security.dependencies.medium.unstable
             }
-        }*/
+        }
 
         /*stage('Software composition analysis') {
             steps {
